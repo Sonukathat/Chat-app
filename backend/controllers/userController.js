@@ -3,13 +3,32 @@ import User from "../models/userModel.js";
 export const register = async (req, res) => {
     try {
         const { username, email, password, gender } = req.body;
+
+        // Simple validation
+        if (!username || !email || !password || !gender) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        // Check if gender is valid
+        if (!["male", "female"].includes(gender.toLowerCase())) {
+            return res.status(400).json({ message: "Gender must be 'male' or 'female'" });
+        }
+
         const hashed = await bcrypt.hash(password, 10);
-        const user = await User.create({ username, email, password: hashed, gender });
-        res.status(201).json({ message: "user created", user })
+
+        const user = await User.create({
+            username,
+            email,
+            password: hashed,
+            gender: gender.toLowerCase()
+        });
+
+        res.status(201).json({ message: "User registered", user });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 export const login = async (req, res) => {
     try {
