@@ -13,7 +13,7 @@ export default function Login() {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+      const res = await axios.post("http://localhost:3000/api/user/login", { email, password });
       localStorage.setItem("token", res.data.token);
       navigate("/chat");
     } catch (err) {
