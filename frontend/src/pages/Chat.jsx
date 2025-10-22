@@ -7,13 +7,18 @@ export default function Chat() {
   const [users, setUsers] = useState([]);
   const messagesEndRef = useRef(null);
 
+  const username = localStorage.getItem("username") || "Guest";
+
   useEffect(() => {
-    // receive messages
+    // Register user name dynamically
+    socket.emit("register_user", username);
+  }, [username]);
+
+  useEffect(() => {
     socket.on("receive_message", (data) => {
-      setChat(prev => [...prev, data]);
+      setChat((prev) => [...prev, data]);
     });
 
-    // online users
     socket.on("users", (data) => {
       setUsers(data);
     });
@@ -30,7 +35,7 @@ export default function Chat() {
 
   const sendMessage = () => {
     if (!message.trim()) return;
-    socket.emit("send_message", { sender: "Sonu", text: message });
+    socket.emit("send_message", { sender: username, text: message });
     setMessage("");
   };
 
@@ -57,11 +62,11 @@ export default function Chat() {
           {chat.map((msg, i) => (
             <div
               key={i}
-              className={`mb-2 flex ${msg.sender === "Sonu" ? "justify-end" : "justify-start"}`}
+              className={`mb-2 flex ${msg.sender === username ? "justify-end" : "justify-start"}`}
             >
               <div
                 className={`px-3 py-2 rounded-lg max-w-xs ${
-                  msg.sender === "Sonu"
+                  msg.sender === username
                     ? "bg-purple-500 text-white"
                     : "bg-gray-200 text-gray-800"
                 }`}

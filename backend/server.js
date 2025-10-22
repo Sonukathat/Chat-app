@@ -14,14 +14,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// API Routes
 app.use("/api/user", userRoutes);
 app.use("/api/messages", messageRoutes);
 
-// Create HTTP Server
 const server = http.createServer(app);
-
-// Setup Socket.io
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -29,31 +25,26 @@ const io = new Server(server, {
   },
 });
 
-// 🔹 Track connected users
-let users = [];
+// Store users as objects: { id, username }
+const users = {}; // socket.id → username mapping
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
-  users.push(socket.id);
 
-  // send updated user list to all clients
-  io.emit("users", users);
+  socket.on("register_user", (username) => {
+    users[socket.id] = username;
+    io.emit("users", Object.values(users));
+    console.log(`${username} connected`);
+  });
 
-  // handle message event
   socket.on("send_message", (data) => {
     io.emit("receive_message", data);
   });
 
-  // when user disconnects
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-    users = users.filter((id) => id !== socket.id);
-    io.emit("users", users);
+    const username = users[socket.id];
+    delete users[socket.id];
+    io.emit("users", Object.values(users));
+    console.log(`${username} disconnected`);
   });
 });
-
-// Server Start
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () =>
-  console.log(`✅ Server running on port ${PORT}`)
-);
