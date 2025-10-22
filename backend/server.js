@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import Message from "./models/messageModel.js"; // ← new
 
 dotenv.config();
 connectDB();
@@ -25,7 +26,7 @@ const io = new Server(server, {
   },
 });
 
-// Store users as objects: { id, username }
+// socket users
 const users = {}; // socket.id → username mapping
 
 io.on("connection", (socket) => {
@@ -37,8 +38,18 @@ io.on("connection", (socket) => {
     console.log(`${username} connected`);
   });
 
-  socket.on("send_message", (data) => {
-    io.emit("receive_message", data);
+  // send message → save in DB
+  socket.on("send_message", async (data) => {
+    try {
+      const newMessage = await Message.create({
+        sender: data.sender,
+        receiver: data.receiver,
+        text: data.text
+      });
+      io.emit("receive_message", newMessage);
+    } catch (err) {
+      console.log("Error saving message:", err.message);
+    }
   });
 
   socket.on("disconnect", () => {
@@ -49,8 +60,5 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT;
-
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
