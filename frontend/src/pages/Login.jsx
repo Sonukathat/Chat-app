@@ -22,7 +22,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500">
+    <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-pink-500 via-red-500 to-yellow-500">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
         <input

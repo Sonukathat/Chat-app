@@ -35,7 +35,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-gray-800">
+    <div className="flex flex-col md:flex-row h-screen bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 text-gray-800">
       
       {/* Left Sidebar - Users */}
       <div className="w-full md:w-1/4 bg-white shadow-md rounded-lg p-4 mb-4 md:mb-0 md:mr-4 overflow-y-auto">
