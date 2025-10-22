@@ -13,15 +13,13 @@ export default function Login() {
             return;
         }
         try {
-            const res = await axios.post("http://localhost:3000/api/user/login", { email, password });
+            const res = await axios.post("http://localhost:5000/api/user/login", { email, password });
 
-            // 1️⃣ Token store
+        
             localStorage.setItem("token", res.data.token);
+            localStorage.setItem("username", res.data.name); 
+            // console.log(res.data);
 
-            // 2️⃣ Username store (ye Chat.jsx me use hoga)
-            localStorage.setItem("username", res.data.name); // <- ye line add karo
-
-            // 3️⃣ Navigate to chat
             navigate("/chat");
         } catch (err) {
             alert(err.response?.data?.message || "Error occurred");
