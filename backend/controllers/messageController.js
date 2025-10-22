@@ -1,4 +1,4 @@
-import Message from "../models/messageModel";
+import Message from "../models/messageModel.js";
 
 export const getMessages = async (req, res) => {
   const messages = await Message.find();
