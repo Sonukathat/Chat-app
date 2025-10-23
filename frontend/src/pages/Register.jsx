@@ -9,6 +9,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("male");
+  const [profilePic, setProfilePic] = useState(null); // ← new
   const navigate = useNavigate();
 
   const handleRegister = async () => {
@@ -20,10 +21,22 @@ export default function Register() {
       });
       return;
     }
+
     try {
-      const res = await axios.post("https://chat-app-pug2.onrender.com/api/user/register", {
-        username, email, password, gender
-      });
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("gender", gender);
+      if (profilePic) formData.append("profilePic", profilePic);
+
+      const res = await axios.post(
+        "https://chat-app-pug2.onrender.com/api/user/register",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       toast.success(res.data.message || "Registered successfully!", {
         position: "top-right",
@@ -49,12 +62,14 @@ export default function Register() {
         <h2 className="text-3xl font-bold text-white text-center mb-6 tracking-wide">
           Create Account
         </h2>
+
         <input
           className="w-full mb-4 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
+
         <input
           className="w-full mb-4 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
           placeholder="Email"
@@ -62,6 +77,7 @@ export default function Register() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+
         <input
           className="w-full mb-4 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
           placeholder="Password"
@@ -69,20 +85,31 @@ export default function Register() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
         <select
-          className="w-full mb-6 px-4 py-3 rounded-lg bg-white/30 text-white border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+          className="w-full mb-4 px-4 py-3 rounded-lg bg-white/30 text-white border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
           value={gender}
           onChange={(e) => setGender(e.target.value)}
         >
           <option value="male">Male</option>
           <option value="female">Female</option>
         </select>
+
+        {/* Profile Pic Input */}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setProfilePic(e.target.files[0])}
+          className="w-full mb-6 px-4 py-3 rounded-lg bg-white/30 text-white border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+        />
+
         <button
           onClick={handleRegister}
           className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold cursor-pointer rounded-lg shadow-md transition transform hover:-translate-y-1"
         >
           Register
         </button>
+
         <p className="text-center text-white/70 mt-4 text-sm">
           Already have an account?{" "}
           <span
@@ -93,6 +120,7 @@ export default function Register() {
           </span>
         </p>
       </div>
+
       <ToastContainer />
     </div>
   );

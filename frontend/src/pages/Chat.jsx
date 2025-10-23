@@ -15,6 +15,7 @@ export default function Chat() {
 
   const messagesEndRef = useRef(null);
 
+  // Register user on socket and handle incoming messages
   useEffect(() => {
     socket.emit("register_user", username);
 
@@ -35,10 +36,12 @@ export default function Chat() {
     };
   }, [selectedUser, username]);
 
+  // Scroll to bottom on new message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
+  // Fetch chat history when user selected
   useEffect(() => {
     if (!selectedUser) return;
     const fetchMessages = async () => {
@@ -63,6 +66,9 @@ export default function Chat() {
     navigate("/");
   };
 
+  // Default profile pic
+  const defaultPic = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
   return (
     <div className="flex h-screen bg-linear-to-r from-indigo-400 via-purple-500 to-pink-500">
       {/* Users List */}
@@ -74,25 +80,34 @@ export default function Chat() {
       >
         <div className="overflow-y-auto flex-1">
           <h2 className="font-bold mb-4 text-xl text-white">Online Users</h2>
-          {users.filter((u) => u !== username).map((user, i) => (
-            <div
-              key={i}
-              className={`p-2 cursor-pointer rounded mb-2 transition-colors duration-200
-                ${user === selectedUser
-                  ? "bg-purple-500 text-white font-semibold shadow-md"
-                  : "hover:bg-white/30 text-white"
-                }`}
-              onClick={() => {
-                setSelectedUser(user);
-                setShowUsersMobile(false);
-              }}
-            >
-              {user}
-            </div>
-          ))}
+          {users
+            .filter((u) => u.username !== username)
+            .map((user, i) => (
+              <div
+                key={i}
+                className={`p-2 cursor-pointer rounded mb-2 transition-colors duration-200
+                  ${user.username === selectedUser
+                    ? "bg-purple-500 text-white font-semibold shadow-md"
+                    : "hover:bg-white/30 text-white"
+                  }`}
+                onClick={() => {
+                  setSelectedUser(user.username);
+                  setShowUsersMobile(false);
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <img
+                    src={user.profilePic || defaultPic}
+                    alt="profile"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <span>{user.username}</span>
+                </div>
+              </div>
+            ))}
         </div>
 
-        {/* 🔹 Logout (fixed at bottom) */}
+        {/* Logout */}
         <div
           onClick={handleLogout}
           className="mt-4 flex items-center gap-2 p-2 cursor-pointer bg-white/50 rounded"
@@ -129,6 +144,13 @@ export default function Chat() {
                 key={i}
                 className={`mb-3 flex ${msg.sender === username ? "justify-end" : "justify-start"}`}
               >
+                {msg.sender !== username && (
+                  <img
+                    src={msg.senderProfilePic || defaultPic}
+                    alt="profile"
+                    className="w-6 h-6 rounded-full object-cover mr-2 self-end"
+                  />
+                )}
                 <div
                   className={`px-4 py-2 rounded-xl max-w-xs wrap-break-word shadow-md
                     ${msg.sender === username

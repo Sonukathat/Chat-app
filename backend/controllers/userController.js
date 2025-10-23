@@ -6,31 +6,30 @@ export const register = async (req, res) => {
     try {
         const { username, email, password, gender } = req.body;
 
-        // Simple validation
         if (!username || !email || !password || !gender) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        // Check if gender is valid
-        if (!["male", "female"].includes(gender.toLowerCase())) {
-            return res.status(400).json({ message: "Gender must be 'male' or 'female'" });
-        }
-
         const hashed = await bcrypt.hash(password, 10);
+
+        // req.file.path contains Cloudinary URL
+        const profilePic = req.file
+            ? req.file.path
+            : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
         const user = await User.create({
             username,
             email,
             password: hashed,
-            gender: gender.toLowerCase()
+            gender: gender.toLowerCase(),
+            profilePic,
         });
 
-        res.status(201).json({ message: "User registered", user });
+        res.status(201).json({ message: "User registered successfully", user });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 export const login = async (req, res) => {
     try {
@@ -42,7 +41,7 @@ export const login = async (req, res) => {
         if (!match) return res.status(400).json({ message: "wrong password" });
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.status(200).json({ message: "login succesfull", token,name:user.username });
+        res.status(200).json({ message: "login succesfull", token, name: user.username });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

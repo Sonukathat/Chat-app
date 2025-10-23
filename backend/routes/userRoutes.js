@@ -1,8 +1,10 @@
-import express from "express"
-import { login, register } from "../controllers/userController.js";
+import express from "express";
+import { register, login } from "../controllers/userController.js";
+import parser from "../middleware/upload.js";
+
 const router = express.Router();
 
-router.post('/register', register);
-router.post('/login', login);
+router.post("/register", parser.single("profilePic"), register);
+router.post("/login", login);
 
 export default router;
