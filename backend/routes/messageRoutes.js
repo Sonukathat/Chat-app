@@ -2,7 +2,7 @@ import express from "express";
 import { getMessages, saveMessage } from "../controllers/messageController.js";
 const router = express.Router();
 
-router.get("/", getMessages); // ?user1=Sonu&user2=Ankit
+router.get("/", getMessages); 
 router.post("/", saveMessage);
 
 export default router;
