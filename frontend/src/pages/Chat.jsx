@@ -55,19 +55,22 @@ export default function Chat() {
     };
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div className="flex h-screen bg-linear-to-r from-indigo-400 via-purple-500 to-pink-500" >
+            {/* Users List */}
             <div
-                className={`bg-white border-r p-4 overflow-y-auto w-64 h-full
+                className={`bg-white/20 backdrop-blur-lg border-r border-white/30 p-4 overflow-y-auto w-64 h-full
         fixed md:relative z-20 md:z-auto
         md:translate-x-0 transition-transform duration-300
-        ${showUsersMobile ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-      `}
+        ${showUsersMobile ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
             >
-                <h2 className="font-bold mb-4 text-xl">Online Users</h2>
+                <h2 className="font-bold mb-4 text-xl text-white">Online Users</h2>
                 {users.filter((u) => u !== username).map((user, i) => (
                     <div
                         key={i}
-                        className={`p-2 cursor-pointer rounded mb-1 ${user === selectedUser ? "bg-purple-200" : "hover:bg-gray-200"
+                        className={`p-2 cursor-pointer rounded mb-2 transition-colors duration-200
+                            ${user === selectedUser
+                                ? "bg-purple-500 text-white font-semibold shadow-md"
+                                : "hover:bg-white/30 text-white"
                             }`}
                         onClick={() => {
                             setSelectedUser(user);
@@ -79,16 +82,17 @@ export default function Chat() {
                 ))}
             </div>
 
-            <div className="flex-1 flex flex-col w-full">
+            {/* Chat Area */}
+            <div className="flex-1 flex flex-col w-full bg-no-repeat bg-center bg-cover" style={{ backgroundImage: "url('927542-3840x2160-desktop-4k-love-couple-background-photo.jpg')" }}>
                 {selectedUser && (
-                    <div className="md:hidden flex items-center p-2 bg-purple-500 text-white">
+                    <div className="md:hidden flex items-center p-2 bg-purple-500 text-white shadow-md">
                         <button
                             onClick={() => setShowUsersMobile(true)}
-                            className="mr-2 px-2 py-1 bg-purple-700 rounded"
+                            className="mr-2 px-2 py-1 bg-purple-700 rounded hover:bg-purple-800 transition"
                         >
                             Back
                         </button>
-                        <span className="font-bold">{selectedUser}</span>
+                        <span className="font-bold text-lg">{selectedUser}</span>
                     </div>
                 )}
 
@@ -97,22 +101,22 @@ export default function Chat() {
                         chat.map((msg, i) => (
                             <div
                                 key={i}
-                                className={`mb-2 flex ${msg.sender === username ? "justify-end" : "justify-start"
-                                    }`}
+                                className={`mb-3 flex ${msg.sender === username ? "justify-end" : "justify-start"}`}
                             >
                                 <div
-                                    className={`px-3 py-2 rounded-lg max-w-xs ${msg.sender === username
-                                        ? "bg-purple-500 text-white"
-                                        : "bg-gray-200 text-gray-800"
+                                    className={`px-4 py-2 rounded-xl max-w-xs wrap-break-word shadow-md
+                                        ${msg.sender === username
+                                            ? "bg-purple-600 text-white animate-fade-in"
+                                            : "bg-white/30 text-white backdrop-blur-lg animate-fade-in"
                                         }`}
                                 >
-                                    <p className="text-sm font-semibold">{msg.sender}</p>
-                                    <p>{msg.text}</p>
+                                    <p className="text-xs font-semibold mb-1">{msg.sender}</p>
+                                    <p className="text-sm">{msg.text}</p>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <p className="text-gray-500 text-center mt-10">
+                        <p className="text-white/80 text-center mt-20 text-lg">
                             Select a user to start chatting
                         </p>
                     )}
@@ -120,17 +124,17 @@ export default function Chat() {
                 </div>
 
                 {selectedUser && (
-                    <div className="flex border-t p-2 bg-white">
+                    <div className="flex border-t border-white/30 p-2 bg-white/20 backdrop-blur-lg">
                         <input
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-                            className="flex-1 px-4 py-2 rounded-l-md border focus:outline-none"
+                            className="flex-1 px-4 py-3 rounded-l-lg border-none focus:outline-none bg-white/30 text-white placeholder-white/70 backdrop-blur-sm"
                             placeholder={`Message ${selectedUser}`}
                         />
                         <button
                             onClick={sendMessage}
-                            className="px-4 py-2 bg-purple-500 text-white rounded-r-md hover:bg-purple-600"
+                            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-r-lg shadow-md transition transform hover:-translate-y-0.5"
                         >
                             Send
                         </button>
