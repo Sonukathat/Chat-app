@@ -5,7 +5,8 @@ import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 export default function Chat() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);          // all registered users
+  const [onlineUsers, setOnlineUsers] = useState([]); // only online users
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
@@ -16,11 +17,28 @@ export default function Chat() {
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
 
-  // Register user on socket and handle incoming messages
+  const defaultPic = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+  // ✅ Step 1: Fetch all registered users
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const res = await axios.get("https://chat-app-1-tyex.onrender.com/api/user/all");
+        setUsers(res.data);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
+    fetchAllUsers();
+  }, []);
+
+  // ✅ Step 2: Socket register & track online users
   useEffect(() => {
     socket.emit("register_user", { username, profilePic });
 
-    socket.on("users", (data) => setUsers(data));
+    socket.on("users", (data) => {
+      setOnlineUsers(data.map((u) => u.username)); // online users list
+    });
 
     socket.on("receive_message", (data) => {
       if (
@@ -37,12 +55,12 @@ export default function Chat() {
     };
   }, [selectedUser, username, profilePic]);
 
-  
+  // ✅ Step 3: Auto scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
-  // Fetch chat history when user selected
+  // ✅ Step 4: Fetch old chat history
   useEffect(() => {
     if (!selectedUser) return;
     const fetchMessages = async () => {
@@ -68,10 +86,9 @@ export default function Chat() {
     navigate("/");
   };
 
-  const defaultPic = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-
   return (
     <div className="flex h-screen bg-linear-to-r from-indigo-400 via-purple-500 to-pink-500">
+      {/* Sidebar */}
       <div
         className={`bg-white/20 backdrop-blur-lg border-r border-white/30 p-4 w-64 h-full
         fixed md:relative z-20 md:z-auto flex flex-col justify-between
@@ -79,7 +96,8 @@ export default function Chat() {
         ${showUsersMobile ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         <div className="overflow-y-auto flex-1">
-          <h2 className="font-bold mb-4 text-xl text-white">Online Users</h2>
+          <h2 className="font-bold mb-4 text-xl text-white">All Users</h2>
+
           {users
             .filter((u) => u.username !== username)
             .map((user, i) => (
@@ -101,7 +119,12 @@ export default function Chat() {
                     alt="profile"
                     className="w-8 h-8 rounded-full object-cover"
                   />
-                  <span>{user.username}</span>
+                  <div>
+                    <span>{user.username}</span>
+                    {onlineUsers.includes(user.username) && (
+                      <p className="text-xs text-green-300">Online</p>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -116,7 +139,7 @@ export default function Chat() {
         </div>
       </div>
 
-      
+      {/* Chat section */}
       <div
         className="flex-1 flex flex-col w-full bg-no-repeat bg-center bg-cover"
         style={{
