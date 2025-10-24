@@ -33,6 +33,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
+        
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) return res.status(400).json({ message: "user not found" });
@@ -41,7 +42,13 @@ export const login = async (req, res) => {
         if (!match) return res.status(400).json({ message: "wrong password" });
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.status(200).json({ message: "login succesfull", token, name: user.username });
+        res.status(200).json({
+            message: "login succesfull",
+            token,
+            name: user.username,
+            profilePic: user.profilePic ? `http://localhost:5000/${user.profilePic}` : "",
+        });
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
