@@ -46,7 +46,7 @@ export const login = async (req, res) => {
             message: "login succesfull",
             token,
             name: user.username,
-            profilePic: user.profilePic ? `https://chat-app-1-tyex.onrender.com/${user.profilePic}` : "",
+            profilePic: user.profilePic ? user.profilePic : "",
         });
 
     } catch (error) {

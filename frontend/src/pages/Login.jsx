@@ -27,7 +27,7 @@ export default function Login() {
 
             // Save username, token, and profilePic in localStorage
             localStorage.setItem("token", res.data.token);
-            localStorage.setItem("username", res.data.username);
+            localStorage.setItem("username", res.data.name);
             localStorage.setItem(
                 "profilePic",
                 res.data.profilePic || "" // default empty if none
