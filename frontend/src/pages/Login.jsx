@@ -14,44 +14,43 @@ export default function Login() {
             toast.error("All fields are required!", {
                 position: "top-right",
                 autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
                 theme: "colored",
             });
             return;
         }
 
         try {
-            const res = await axios.post("https://chat-app-1-tyex.onrender.com/api/user/login", { email, password });
+            const res = await axios.post(
+                "https://chat-app-1-tyex.onrender.com/api/user/login",
+                { email, password }
+            );
 
+            // Save username, token, and profilePic in localStorage
             localStorage.setItem("token", res.data.token);
-            localStorage.setItem("username", res.data.name); 
+            localStorage.setItem("username", res.data.username);
+            localStorage.setItem(
+                "profilePic",
+                res.data.profilePic || "" // default empty if none
+            );
 
             toast.success("Login successful!", {
                 position: "top-right",
                 autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
                 theme: "colored",
             });
 
             setTimeout(() => {
                 navigate("/chat");
-            }, 2000); // wait 2 sec for toast to show
+            }, 2000);
         } catch (err) {
-            toast.error(err.response?.data?.message || "Wrong email or password!", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                theme: "colored",
-            });
+            toast.error(
+                err.response?.data?.message || "Wrong email or password!",
+                {
+                    position: "top-right",
+                    autoClose: 3000,
+                    theme: "colored",
+                }
+            );
         }
     };
 
@@ -65,14 +64,14 @@ export default function Login() {
                     Login to continue to your chat
                 </p>
                 <input
-                    className="w-full mb-4 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition"
+                    className="w-full mb-4 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
                     placeholder="Email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
-                    className="w-full mb-6 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition"
+                    className="w-full mb-6 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
                     placeholder="Password"
                     type="password"
                     value={password}
@@ -85,7 +84,13 @@ export default function Login() {
                     Login
                 </button>
                 <p className="text-center text-white/70 mt-4 text-sm">
-                    Don't have an account? <span onClick={()=>navigate('/register')} className="text-purple-200 font-semibold cursor-pointer hover:underline">Sign Up</span>
+                    Don't have an account?{" "}
+                    <span
+                        onClick={() => navigate("/register")}
+                        className="text-purple-200 font-semibold cursor-pointer hover:underline"
+                    >
+                        Sign Up
+                    </span>
                 </p>
             </div>
             <ToastContainer />
