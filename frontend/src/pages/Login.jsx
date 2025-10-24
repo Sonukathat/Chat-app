@@ -30,7 +30,7 @@ export default function Login() {
             localStorage.setItem("username", res.data.name);
             localStorage.setItem(
                 "profilePic",
-                res.data.profilePic || "" // default empty if none
+                res.data.profilePic || ""
             );
 
             toast.success("Login successful!", {
