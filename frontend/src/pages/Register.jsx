@@ -31,7 +31,7 @@ export default function Register() {
       if (profilePic) formData.append("profilePic", profilePic);
 
       const res = await axios.post(
-        "https://chat-app-pug2.onrender.com/api/user/register",
+        "https://chat-app-1-tyex.onrender.com/api/user/register",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

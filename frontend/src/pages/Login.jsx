@@ -24,7 +24,7 @@ export default function Login() {
         }
 
         try {
-            const res = await axios.post("https://chat-app-pug2.onrender.com/api/user/login", { email, password });
+            const res = await axios.post("https://chat-app-1-tyex.onrender.com/api/user/login", { email, password });
 
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("username", res.data.name); 

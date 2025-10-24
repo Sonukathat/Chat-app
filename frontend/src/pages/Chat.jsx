@@ -46,7 +46,7 @@ export default function Chat() {
     if (!selectedUser) return;
     const fetchMessages = async () => {
       const res = await axios.get(
-        `https://chat-app-pug2.onrender.com/api/messages?user1=${username}&user2=${selectedUser}`
+        `https://chat-app-1-tyex.onrender.com/api/messages?user1=${username}&user2=${selectedUser}`
       );
       setChat(res.data);
     };
