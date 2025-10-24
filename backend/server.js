@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
 
   socket.on("register_user", (username) => {
     users[socket.id] = username;
-    io.emit("users", Object.values(users));
+    io.emit("users", Object.values(users).map((u) => ({ username: u })));
     console.log(`${username} connected`);
   });
 
@@ -59,9 +59,10 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     const username = users[socket.id];
     delete users[socket.id];
-    io.emit("users", Object.values(users));
+    io.emit("users", Object.values(users).map((u) => ({ username: u })));
     console.log(`${username} disconnected`);
   });
+
 });
 
 const PORT = process.env.PORT || 5000;
