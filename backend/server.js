@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
-import Message from "./models/messageModel.js"; // ← new
+import Message from "./models/messageModel.js";
 
 dotenv.config();
 connectDB();
@@ -15,9 +15,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// app.get('/',(req,res)=>{
-//   res.send("hello...")
-// })
+// Serve uploaded profile pics
+app.use("/uploads", express.static("uploads"));
 
 app.use("/api/user", userRoutes);
 app.use("/api/messages", messageRoutes);
@@ -30,16 +29,17 @@ const io = new Server(server, {
   },
 });
 
-// socket users
-const users = {}; // socket.id → username mapping
+// socket users: socket.id -> { username, profilePic }
+const users = {};
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  socket.on("register_user", (username) => {
-    users[socket.id] = username;
-    io.emit("users", Object.values(users).map((u) => ({ username: u })));
-    console.log(`${username} connected`);
+  socket.on("register_user", (userData) => {
+    // userData = { username, profilePic }
+    users[socket.id] = userData;
+    io.emit("users", Object.values(users)); // emit full objects
+    console.log(`${userData.username} connected`);
   });
 
   // send message → save in DB
@@ -48,7 +48,8 @@ io.on("connection", (socket) => {
       const newMessage = await Message.create({
         sender: data.sender,
         receiver: data.receiver,
-        text: data.text
+        text: data.text,
+        senderProfilePic: data.senderProfilePic || "", // store sender pic
       });
       io.emit("receive_message", newMessage);
     } catch (err) {
@@ -57,12 +58,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    const username = users[socket.id];
+    const user = users[socket.id];
     delete users[socket.id];
-    io.emit("users", Object.values(users).map((u) => ({ username: u })));
-    console.log(`${username} disconnected`);
+    io.emit("users", Object.values(users));
+    console.log(`${user?.username} disconnected`);
   });
-
 });
 
 const PORT = process.env.PORT || 5000;
