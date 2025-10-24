@@ -125,7 +125,6 @@ export default function Register() {
           </span>
         </p>
       </div>
-
       <ToastContainer />
     </div>
   );
