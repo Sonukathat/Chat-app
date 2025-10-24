@@ -122,7 +122,7 @@ export default function Chat() {
                   <div>
                     <span>{user.username}</span>
                     {onlineUsers.includes(user.username) && (
-                      <p className="text-xs text-green-300">Online</p>
+                      <p className="text-xs text-gray-300">online</p>
                     )}
                   </div>
                 </div>
