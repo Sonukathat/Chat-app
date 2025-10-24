@@ -10,14 +10,15 @@ export default function Chat() {
   const [message, setMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUsersMobile, setShowUsersMobile] = useState(true);
-  const username = localStorage.getItem("username");
-  const navigate = useNavigate();
 
+  const username = localStorage.getItem("username");
+  const profilePic = localStorage.getItem("profilePic"); // new
+  const navigate = useNavigate();
   const messagesEndRef = useRef(null);
 
   // Register user on socket and handle incoming messages
   useEffect(() => {
-    socket.emit("register_user", username);
+    socket.emit("register_user", { username, profilePic });
 
     socket.on("users", (data) => setUsers(data));
 
@@ -34,7 +35,7 @@ export default function Chat() {
       socket.off("users");
       socket.off("receive_message");
     };
-  }, [selectedUser, username]);
+  }, [selectedUser, username, profilePic]);
 
   // Scroll to bottom on new message
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function Chat() {
 
   const sendMessage = () => {
     if (!message.trim() || !selectedUser) return;
-    const msg = { sender: username, receiver: selectedUser, text: message };
+    const msg = { sender: username, receiver: selectedUser, text: message, senderProfilePic: profilePic };
     socket.emit("send_message", msg);
     setMessage("");
   };
@@ -63,10 +64,10 @@ export default function Chat() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("profilePic");
     navigate("/");
   };
 
-  // Default profile pic
   const defaultPic = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
   return (

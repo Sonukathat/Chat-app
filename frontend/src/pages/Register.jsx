@@ -9,7 +9,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("male");
-  const [profilePic, setProfilePic] = useState(null); // ← new
+  const [profilePic, setProfilePic] = useState(null);
   const navigate = useNavigate();
 
   const handleRegister = async () => {
@@ -33,9 +33,7 @@ export default function Register() {
       const res = await axios.post(
         "https://chat-app-1-tyex.onrender.com/api/user/register",
         formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       toast.success(res.data.message || "Registered successfully!", {
@@ -44,8 +42,15 @@ export default function Register() {
         theme: "colored",
       });
 
+      // ✅ Save user info for chat
+      const userData = res.data.user;
+      if (userData) {
+        localStorage.setItem("username", userData.username);
+        localStorage.setItem("profilePic", userData.profilePic || "");
+      }
+
       setTimeout(() => {
-        navigate("/");
+        navigate("/"); // redirect to login
       }, 2000);
     } catch (err) {
       toast.error(err.response?.data?.message || "Error occurred!", {
