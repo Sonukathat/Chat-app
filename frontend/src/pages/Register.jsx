@@ -42,7 +42,7 @@ export default function Register() {
         theme: "colored",
       });
 
-      // ✅ Save user info for chat
+      
       const userData = res.data.user;
       if (userData) {
         localStorage.setItem("username", userData.username);
@@ -50,7 +50,7 @@ export default function Register() {
       }
 
       setTimeout(() => {
-        navigate("/"); // redirect to login
+        navigate("/");
       }, 2000);
     } catch (err) {
       toast.error(err.response?.data?.message || "Error occurred!", {
@@ -99,8 +99,6 @@ export default function Register() {
           <option value="male">Male</option>
           <option value="female">Female</option>
         </select>
-
-        {/* Profile Pic Input */}
         <input
           type="file"
           accept="image/*"
