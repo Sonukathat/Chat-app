@@ -12,7 +12,7 @@ export default function Chat() {
   const [showUsersMobile, setShowUsersMobile] = useState(true);
 
   const username = localStorage.getItem("username");
-  const profilePic = localStorage.getItem("profilePic"); // new
+  const profilePic = localStorage.getItem("profilePic");
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
 
@@ -37,7 +37,7 @@ export default function Chat() {
     };
   }, [selectedUser, username, profilePic]);
 
-  // Scroll to bottom on new message
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
@@ -72,7 +72,6 @@ export default function Chat() {
 
   return (
     <div className="flex h-screen bg-linear-to-r from-indigo-400 via-purple-500 to-pink-500">
-      {/* Users List */}
       <div
         className={`bg-white/20 backdrop-blur-lg border-r border-white/30 p-4 w-64 h-full
         fixed md:relative z-20 md:z-auto flex flex-col justify-between
@@ -108,7 +107,6 @@ export default function Chat() {
             ))}
         </div>
 
-        {/* Logout */}
         <div
           onClick={handleLogout}
           className="mt-4 flex items-center gap-2 p-2 cursor-pointer bg-white/50 rounded"
@@ -118,7 +116,7 @@ export default function Chat() {
         </div>
       </div>
 
-      {/* Chat Area */}
+      
       <div
         className="flex-1 flex flex-col w-full bg-no-repeat bg-center bg-cover"
         style={{
