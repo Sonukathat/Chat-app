@@ -133,7 +133,7 @@ export default function Chat() {
 
         <div
           onClick={handleLogout}
-          className="mt-4 flex items-center gap-2 p-2 cursor-pointer bg-white/50 rounded"
+          className="mt-4 flex items-center gap-2 p-1 cursor-pointer bg-white/50 rounded"
         >
           <FiLogOut size={20} />
           <span className="font-medium">Logout</span>
