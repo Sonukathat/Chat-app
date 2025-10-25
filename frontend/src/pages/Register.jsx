@@ -13,7 +13,7 @@ export default function Register() {
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault(); 
 
     try {
       const formData = new FormData();
@@ -74,7 +74,7 @@ export default function Register() {
         <input
           className="w-full mb-4 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
           placeholder="Email"
-          type="email" // <-- browser will validate email automatically
+          type="email" 
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
