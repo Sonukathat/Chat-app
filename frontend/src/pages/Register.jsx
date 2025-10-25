@@ -35,11 +35,11 @@ export default function Register() {
         theme: "colored",
       });
 
-      const userData = res.data.user;
-      if (userData) {
-        localStorage.setItem("username", userData.username);
-        localStorage.setItem("profilePic", userData.profilePic || "");
-      }
+      // const userData = res.data.user;
+      // if (userData) {
+      //   localStorage.setItem("username", userData.username);
+      //   localStorage.setItem("profilePic", userData.profilePic || "");
+      // }
 
       setTimeout(() => {
         navigate("/");
