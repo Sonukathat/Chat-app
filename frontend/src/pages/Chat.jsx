@@ -5,8 +5,8 @@ import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 export default function Chat() {
-  const [users, setUsers] = useState([]);          // all registered users
-  const [onlineUsers, setOnlineUsers] = useState([]); // only online users
+  const [users, setUsers] = useState([]);          
+  const [onlineUsers, setOnlineUsers] = useState([]); 
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
@@ -19,7 +19,7 @@ export default function Chat() {
 
   const defaultPic = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
-  // ✅ Step 1: Fetch all registered users
+
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
@@ -32,12 +32,12 @@ export default function Chat() {
     fetchAllUsers();
   }, []);
 
-  // ✅ Step 2: Socket register & track online users
+  
   useEffect(() => {
     socket.emit("register_user", { username, profilePic });
 
     socket.on("users", (data) => {
-      setOnlineUsers(data.map((u) => u.username)); // online users list
+      setOnlineUsers(data.map((u) => u.username)); 
     });
 
     socket.on("receive_message", (data) => {
@@ -55,12 +55,12 @@ export default function Chat() {
     };
   }, [selectedUser, username, profilePic]);
 
-  // ✅ Step 3: Auto scroll
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
-  // ✅ Step 4: Fetch old chat history
+  
   useEffect(() => {
     if (!selectedUser) return;
     const fetchMessages = async () => {
@@ -90,7 +90,7 @@ export default function Chat() {
     <div className="flex h-screen bg-linear-to-r from-indigo-400 via-purple-500 to-pink-500">
       {/* Sidebar */}
       <div
-        className={`bg-white/20 backdrop-blur-lg border-r border-white/30 p-4 w-64 h-full
+        className={`bg-white/20 backdrop-blur-lg border-r border-white/30 p-4 w-full h-full md:w-64
         fixed md:relative z-20 md:z-auto flex flex-col justify-between
         md:translate-x-0 transition-transform duration-300
         ${showUsersMobile ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
