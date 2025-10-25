@@ -10,6 +10,19 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
+        const existingUser = await User.findOne({
+            $or: [{ email }, { username }]
+        });
+
+        if (existingUser) {
+            if (existingUser.email === email) {
+                return res.status(400).json({ message: "Email already exists" });
+            }
+            if (existingUser.username === username) {
+                return res.status(400).json({ message: "Username already exists" });
+            }
+        }
+
         const hashed = await bcrypt.hash(password, 10);
 
         // req.file.path contains Cloudinary URL
@@ -33,7 +46,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        
+
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) return res.status(400).json({ message: "user not found" });
@@ -55,10 +68,10 @@ export const login = async (req, res) => {
 }
 
 export const getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find({}, "username profilePic");
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching users" });
-  }
+    try {
+        const users = await User.find({}, "username profilePic");
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching users" });
+    }
 };
