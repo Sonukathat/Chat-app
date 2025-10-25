@@ -152,7 +152,7 @@ export default function Chat() {
           <div className="md:hidden flex items-center p-2 bg-purple-500 text-white shadow-md">
             <button
               onClick={() => setShowUsersMobile(true)}
-              className="mr-2 px-2 py-1 bg-purple-700 rounded hover:bg-purple-800 transition"
+              className="mr-2 px-1 py-1 bg-purple-700 rounded hover:bg-purple-800 transition"
             >
               <IoArrowBackSharp />
             </button>
