@@ -10,7 +10,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault(); 
 
     if (!email || !password) {
       toast.error("All fields are required!", {
@@ -27,7 +27,7 @@ export default function Login() {
         { email, password }
       );
 
-      // Save username, token, and profilePic in localStorage
+      
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("username", res.data.name);
       localStorage.setItem("profilePic", res.data.profilePic || "");
@@ -66,7 +66,7 @@ export default function Login() {
         <input
           className="w-full mb-4 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
           placeholder="Email"
-          type="email" // browser will validate automatically
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -82,7 +82,7 @@ export default function Login() {
         />
 
         <button
-          type="submit" // triggers form submit
+          type="submit" 
           className="w-full py-3 cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md transition transform hover:-translate-y-1"
         >
           Login
@@ -92,7 +92,7 @@ export default function Login() {
           Don't have an account?{" "}
           <span
             onClick={() => navigate("/register")}
-            className="text-purple-200 font-semibold cursor-pointer hover:underline"
+            className="text-purple-200 font-semibold cursor-pointer hover:text-white hover:underline"
           >
             Sign Up
           </span>
