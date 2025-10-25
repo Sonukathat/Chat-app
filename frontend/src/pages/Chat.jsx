@@ -3,6 +3,7 @@ import { socket } from "../socket";
 import axios from "axios";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { IoArrowBackSharp } from "react-icons/io5";
 
 export default function Chat() {
   const [users, setUsers] = useState([]);          
@@ -153,7 +154,7 @@ export default function Chat() {
               onClick={() => setShowUsersMobile(true)}
               className="mr-2 px-2 py-1 bg-purple-700 rounded hover:bg-purple-800 transition"
             >
-              Back
+              <IoArrowBackSharp />
             </button>
             <span className="font-bold text-lg">{selectedUser}</span>
           </div>
