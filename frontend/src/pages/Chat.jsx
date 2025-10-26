@@ -118,7 +118,7 @@ export default function Chat() {
                   <img
                     src={user.profilePic || defaultPic}
                     alt="profile"
-                    className="w-8 h-8 rounded-full object-cover"
+                    className=" h-8 rounded-full object-cover"
                   />
                   <div>
                     <span>{user.username}</span>
