@@ -149,7 +149,7 @@ export default function Chat() {
         }}
       >
         {selectedUser && (
-          <div className="md:hidden fixed flex items-center p-2 bg-purple-500 text-white shadow-md">
+          <div className="md:hidden flex items-center p-2 bg-purple-500 text-white shadow-md">
             <button
               onClick={() => setShowUsersMobile(true)}
               className="mr-2 px-1 py-1 bg-purple-700 rounded hover:bg-purple-800 transition"
